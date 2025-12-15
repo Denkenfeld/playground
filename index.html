@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini Code Playground</title>
+    <style>
+        /* Basic Reset and Layout */
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; }
+        body { display: flex; flex-direction: column; background-color: #1e1e1e; color: #fff; }
+
+        /* Header */
+        header {
+            padding: 10px 20px;
+            background-color: #252526;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        h1 { margin: 0; font-size: 1.2rem; }
+
+        /* Button Styling */
+        #run-btn {
+            background-color: #0e639c;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        #run-btn:hover { background-color: #1177bb; }
+
+        /* Main Content Area */
+        #container {
+            display: flex;
+            flex: 1;
+            height: calc(100% - 60px); /* Adjust for header height */
+        }
+
+        /* Editor Section */
+        #editor-container {
+            width: 50%;
+            border-right: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+        }
+        textarea {
+            width: 100%;
+            height: 100%;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            border: none;
+            padding: 15px;
+            resize: none;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 14px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        /* Preview Section */
+        #preview-container {
+            width: 50%;
+            background-color: white; /* Iframe needs white bg usually */
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            #container { flex-direction: column; }
+            #editor-container, #preview-container { width: 100%; height: 50%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Gemini Playground</h1>
+        <button id="run-btn">▶ Run Code</button>
+    </header>
+
+    <div id="container">
+        <div id="editor-container">
+            <textarea id="code-input" placeholder="Paste your HTML/CSS/JS code here..."></textarea>
+        </div>
+        <div id="preview-container">
+            <iframe id="preview-frame"></iframe>
+        </div>
+    </div>
+
+    <script>
+        const runBtn = document.getElementById('run-btn');
+        const codeInput = document.getElementById('code-input');
+        const previewFrame = document.getElementById('preview-frame');
+
+        // Function to inject code into the iframe
+        function runCode() {
+            const code = codeInput.value;
+            const frameDoc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+
+            frameDoc.open();
+            frameDoc.write(code);
+            frameDoc.close();
+        }
+
+        // Run on click
+        runBtn.addEventListener('click', runCode);
+
+        // Optional: Run automatically if you press Ctrl+Enter inside the text area
+        codeInput.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                runCode();
+            }
+        });
+        
+        // Load some initial text
+        codeInput.value = `\n<style>\n  body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f0f0f0; }\n  h1 { color: #333; transform: rotate(-5deg); }\n</style>\n\n<h1>Hello from Gemini!</h1>`;
+    </script>
+</body>
+</html>
